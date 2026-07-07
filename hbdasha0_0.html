@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Happy Birthday Asha ✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght=0,400;0,600;1,400&family=Sacramento&family=Work+Sans:wght=300;400;500&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(240, 225, 220, 0.2)), 
+                              url('https://i.postimg.cc/nzsJN1vZ/73cff69a-ffad-4798-a02a-057820711c70.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -10;
+            pointer-events: none;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            color: #5c4f46;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 20px 140px 20px;
+            background: transparent;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* --- SCREEN 1: KODE INTERAKTIF --- */
+        #gate-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .gate-container {
+            width: 100%;
+            max-width: 280px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            padding: 25px 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .padlock-png {
+            width: 55px;
+            height: auto;
+            margin: 0 auto 15px auto;
+            display: block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+        }
+
+        .code-display {
+            width: 100%;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(184, 135, 127, 0.3);
+            font-size: 1.4rem;
+            letter-spacing: 6px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #b8877f;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .key-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(227, 213, 202, 0.8);
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #7d6b5e;
+            border-radius: 50%;
+            aspect-ratio: 1;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .key-btn:active {
+            background: #f2e3db;
+            transform: scale(0.9);
+        }
+
+        .btn-action {
+            width: 100%;
+            background-color: #d9b48f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(217, 180, 143, 0.3);
+        }
+
+        #clue-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(40, 36, 34, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 150;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .clue-frame {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            max-width: 80%;
+            text-align: center;
+            position: relative;
+            transform: scale(0.85);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .clue-frame img { max-width: 100%; max-height: 40vh; display: block; margin: 0 auto; }
+        .close-clue-btn { position: absolute; top: 10px; right: 14px; background: none; border: none; color: #7d6b5e; font-size: 1.5rem; cursor: pointer; font-weight: bold; }
+
+        .flower-curtain {
+            position: fixed;
+            top: 0; width: 50%; height: 100%;
+            background-color: #f5ebe6;
+            background-image: linear-gradient(rgba(245, 235, 230, 0.1), rgba(245, 235, 230, 0.1)),
+                              url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Justus_Juncker_-_Fr%C3%BChlingsblumen_in_glasierter_Vase.jpg/360px-Justus_Juncker_-_Fr%C3%BChlingsblumen_in_glasierter_Vase.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 250;
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform;
+        }
+        #curtain-left { left: 0; transform: translateX(-100%); }
+        #curtain-right { right: 0; transform: translateX(100%); }
+
+        /* --- SCREEN 2: MAIN UTAMA --- */
+        #main-screen {
+            display: none;
+            opacity: 0;
+            width: 100%;
+            max-width: 400px;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-top: 10px;
+        }
+
+        .hbd-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            width: 100%;
+            transition: min-height 0.9s cubic-bezier(0.25, 1, 0.5, 1), margin 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .hbd-container.moved-up {
+            min-height: auto;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .hbd-title-img {
+            width: 85%;
+            max-width: 320px;
+            cursor: pointer;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .hbd-title-img:active { transform: scale(0.95); }
+
+        /* REVISI: Ukuran kue agak dibesarkan, jarak margin-top didekatkan dengan ucapan */
+        .cake-img {
+            display: none;
+            opacity: 0;
+            width: 215px; 
+            margin-top: -30px; 
+            filter: drop-shadow(0 8px 15px rgba(0,0,0,0.1));
+            transform: scale(0.3) translate3d(0, 40px, 0);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .cake-img.popup-show {
+            opacity: 1;
+            transform: scale(1) translate3d(0, 0, 0);
+        }
+
+        .letter-box {
+            display: none;
+            opacity: 0;
+            margin-top: 15px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 18px;
+            border: 1px solid rgba(255,255,255,0.4);
+            text-align: left;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translate3d(0, 25px, 0);
+        }
+
+        .letter-target { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.1rem; color: #4a3e3d; margin-bottom: 8px; }
+        .letter-p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.85rem; color: #6b5b52; line-height: 1.6; margin-bottom: 10px; text-indent: 12px; }
+
+        /* --- SEKSI KAMERA INTERAKTIF (REVISI UKURAN) --- */
+        .camera-section {
+            display: none;
+            opacity: 0;
+            width: 100%;
+            margin-top: 40px;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+        }
+
+        /* REVISI: Ukuran bodi kamera diperbesar */
+        .camera-btn {
+            width: 215px;
+            height: auto;
+            cursor: pointer;
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.12));
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 10;
+        }
+        .camera-btn:active { transform: scale(0.93); }
+
+        /* REVISI: Kontainer cetak foto, diletakkan tepat di area bawah kamera tanpa gambar slot lubang */
+        .print-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: -10px; 
+            height: 170px; 
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        /* REVISI: Ukuran polaroid diperbesar, keluar lurus turun ke bawah dari kamera */
+        .polaroid-shoot {
+            width: 130px;
+            height: 155px;
+            background: white;
+            border: 5px solid white;
+            border-bottom: 20px solid white;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            transform: translateY(-165px);
+            opacity: 0;
+            transition: transform 1.1s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
+        }
+
+        .polaroid-shoot.print-out {
+            transform: translateY(10px);
+            opacity: 1;
+        }
+
+        /* ALBUM TEMPAT TERSIMPAN FOTO */
+        .album-container {
+            width: 100%;
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 22px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+        }
+
+        .album-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: #7d6b5e; margin-bottom: 15px; font-weight: 600; }
+        .album-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; min-height: 80px; }
+
+        .album-item {
+            background: white;
+            border: 3px solid white;
+            border-bottom: 12px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            aspect-ratio: 3/4;
+            transform: scale(0);
+            animation: itemPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .album-item:active { transform: scale(0.95) !important; }
+        .album-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        @keyframes itemPopIn { to { transform: scale(1); } }
+
+        /* --- OVERLAY KADO POPUP --- */
+        #gift-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            z-index: 800;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            transition: backdrop-filter 0.6s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        #gift-overlay.blur-bg {
+            background-color: rgba(255, 245, 245, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .gift-box-wrapper {
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            transform: translate3d(0, 100vh, 0);
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .gift-img {
+            width: 180px;
+            height: auto;
+            cursor: pointer;
+            filter: drop-shadow(0 12px 30px rgba(0,0,0,0.18));
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+        }
+        .gift-img:active { transform: scale(0.9); }
+
+        .close-gift-btn {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0,0,0,0.05);
+            color: #7d6b5e;
+            font-size: 1.1rem;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 90;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gift-photos-container {
+            display: none;
+            opacity: 0;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            padding: 10px;
+        }
+
+        .photos-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 25px;
+            margin-top: 20px;
+        }
+
+        .gift-polaroid-card {
+            background: white;
+            border: 4px solid white;
+            border-bottom: 16px solid white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            width: 95px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .gift-polaroid-card:active { transform: scale(1.05) !important; z-index: 99; }
+        .gift-polaroid-card img { width: 100%; display: block; }
+
+        .gift-polaroid-card.pic-left { transform: rotate(-12deg) translate3d(-5px, 5px, 0); }
+        .gift-polaroid-card.pic-center { transform: rotate(0deg) translate3d(0, -5px, 0); z-index: 5; }
+        .gift-polaroid-card.pic-right { transform: rotate(12deg) translate3d(5px, 5px, 0); }
+
+        .gift-bouquet-img {
+            width: 130px;
+            height: auto;
+            filter: drop-shadow(0 6px 15px rgba(0,0,0,0.1));
+            transform: scale(0.7);
+            opacity: 0;
+            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+        }
+        .gift-bouquet-img.show-bq {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* --- MUSIC PLAYER & ZOOM OVERLAY --- */
+        .spotify-player {
+            display: none;
+            opacity: 0;
+            width: 100%;
+            background: #282422;
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            align-items: center;
+            text-align: left;
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translate3d(0, 25px, 0);
+            z-index: 10;
+        }
+
+        .spotify-cover { width: 55px; height: 55px; border-radius: 8px; object-fit: cover; margin-right: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .spotify-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+        .spotify-title { font-size: 0.9rem; font-weight: 600; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+        .spotify-artist { font-size: 0.75rem; color: #b3b3b3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .spotify-controls { display: flex; align-items: center; justify-content: center; margin-left: 10px; }
+        .play-btn-circle { width: 40px; height: 40px; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; transition: transform 0.2s ease; }
+        .play-btn-circle svg { width: 18px; height: 18px; fill: #282422; }
+
+        #zoom-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(40, 36, 34, 0.75);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .zoomed-frame {
+            background: white;
+            padding: 8px 8px 40px 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            max-width: 85%;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .zoomed-frame img { max-width: 100%; max-height: 60vh; display: block; }
+        .close-zoom-btn { position: absolute; top: -40px; right: 0; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
+
+        .petal { position: fixed; pointer-events: none; z-index: 99; animation: fall linear forwards; }
+        @keyframes fall {
+            0% { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translate3d(0, 110vh, 0) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-container"></div>
+
+    <audio id="bgm" src="https://github.com/yorinisa2-byte/Yupp/raw/refs/heads/main/VID_20260705_195528_342.mp3" preload="auto"></audio>
+
+    <!-- --- SCREEN 1: KODE INTERAKTIF --- -->
+    <div id="gate-screen">
+        <div class="gate-container">
+            <img class="padlock-png" src="https://i.postimg.cc/Y9mqdz2b/pngtree-pink-padlock-icon-vector-png-image-18562518-removebg-preview.png" alt="Gembok Pink">
+            <div class="code-display" id="codeDisplay">______</div>
+            
+            <div class="keypad-grid">
+                <button class="key-btn" onclick="pressKey('1')">1</button>
+                <button class="key-btn" onclick="pressKey('2')">2</button>
+                <button class="key-btn" onclick="pressKey('3')">3</button>
+                <button class="key-btn" onclick="pressKey('4')">4</button>
+                <button class="key-btn" onclick="pressKey('5')">5</button>
+                <button class="key-btn" onclick="pressKey('6')">6</button>
+                <button class="key-btn" onclick="pressKey('7')">7</button>
+                <button class="key-btn" onclick="pressKey('8')">8</button>
+                <button class="key-btn" onclick="pressKey('9')">9</button>
+                <button class="key-btn" style="background:#f2ebe6; font-size:0.8rem;" onclick="clearCode()">Hapus</button>
+                <button class="key-btn" onclick="pressKey('0')">0</button>
+                <button class="key-btn" style="background:#f2ebe6; font-weight:bold; color:#b8877f;" onclick="openClue()">C</button>
+            </div>
+            <button class="btn-action" onclick="submitGateCode()">Masuk</button>
+        </div>
+    </div>
+
+    <div id="clue-overlay" onclick="closeClue()">
+        <div class="clue-frame" id="clueFrame" onclick="event.stopPropagation()">
+            <button class="close-clue-btn" onclick="closeClue()">✕</button>
+            <img src="https://i.postimg.cc/7hgLdGbC/image-removebg-preview.png" alt="Clue">
+        </div>
+    </div>
+
+    <div class="flower-curtain" id="curtain-left"></div>
+    <div class="flower-curtain" id="curtain-right"></div>
+
+    <!-- --- SCREEN 2: MAIN UTAMA --- -->
+    <div id="main-screen">
+        
+        <div class="hbd-container" id="hbdContainer">
+            <img class="hbd-title-img" id="hbdTitleImg" src="https://i.postimg.cc/pT23fJdz/57b106ae-0e7b-4d30-97e8-f09bcc6fde9a-removebg-preview.png" alt="Happy Birthday" onclick="triggerHbdReveal()">
+            <img class="cake-img" id="cakeImg" src="https://i.postimg.cc/dVyk887j/1b00ecca-5e2b-4424-abdb-c9ac065b8873-removebg-preview.png" alt="Kue Ulang Tahun">
+        </div>
+
+        <div class="letter-box" id="letterBox">
+            <div class="letter-target">Untuk Asha,</div>
+            <p class="letter-p">Selamat bertambah usia. Semoga dibabak kehidupan yang baru ini, setiap langkahmu dituntun menuju kebahagiaan, hatinya dijaga dari kesedihan.</p>
+            <p class="letter-p">Semoga akan datang lebih banyak tawa, lebih sedikit drama dan lebih banyak cerita yang bikin kamu bahagia.</p>
+            <p class="letter-p">Tumbuhlah jadi versi diri kamu yang paling kamu banggakan. aku akan selalu tepuk tangan paling kencang walaupun cuma pakai stiker wa</p>
+        </div>
+
+        <div class="camera-section" id="cameraSection">
+            <img class="camera-btn" id="cameraBtn" src="https://i.postimg.cc/jdr3Phkn/62c6e836-9f15-4230-b1dc-147e8f9237ae-removebg-preview.png" alt="Kamera" onclick="executeCameraAction()">
+            
+            <!-- REVISI: Kontainer cetak foto langsung turun tegak lurus dari bawah kamera -->
+            <div class="print-container">
+                <div class="polaroid-shoot" id="polaroidShoot"></div>
+            </div>
+
+            <div class="album-container">
+                <div class="album-title">Album Foto</div>
+                <div class="album-grid" id="albumGrid"></div>
+            </div>
+        </div>
+
+        <div class="spotify-player" id="spotifyPlayer" onclick="togglePlay()">
+            <img class="spotify-cover" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMHlfXhs8TNZOfDp4Cw_65wxBdz87pl1udxC7dDZglTLs0xqrJ2SnYm8-a1GYf-NIE_M-qHCGTVwr5ER1F9bjt7FsNmXGyPSk9F4g_B0hFtoqrw4fJ4cf0wGZFpfQkDNsgrycfHFJoAN-q/s750/Album+Monokrom.jpg" alt="Cover">
+            <div class="spotify-info">
+                <div class="spotify-title">Monokrom</div>
+                <div class="spotify-artist">Tulus</div>
+            </div>
+            <div class="spotify-controls">
+                <button class="play-btn-circle" type="button">
+                    <svg id="playIcon" viewBox="0 0 24 24" style="display:block;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- OVERLAY KADO POPUP --- -->
+    <div id="gift-overlay">
+        <div class="gift-box-wrapper" id="giftBoxWrapper">
+            <button class="close-gift-btn" id="closeGiftBtn" onclick="closeGiftOverlay()">✕</button>
+            
+            <img class="gift-img" id="giftImg" src="https://i.postimg.cc/zBQZqRJX/0417d06a-3a35-40ae-a4f6-0c3f71e0e08e-removebg-preview.png" alt="Kado" onclick="openGiftContent()">
+            
+            <div class="gift-photos-container" id="giftPhotosContainer">
+                <h3 style="font-family:'Playfair Display', serif; color:#b8877f; margin-bottom:5px; font-size:1.1rem; text-shadow:1px 1px 2px white;">bonus</h3>
+                
+                <div class="photos-row">
+                    <div class="gift-polaroid-card pic-left" onclick="zoomPhoto('https://i.postimg.cc/3RBn3MY4/retro-polaroid-1783338551962.png', event)">
+                        <img src="https://i.postimg.cc/3RBn3MY4/retro-polaroid-1783338551962.png">
+                    </div>
+                    <div class="gift-polaroid-card pic-center" onclick="zoomPhoto('https://i.postimg.cc/bNGHBSDk/retro-polaroid-1783338623277.png', event)">
+                        <img src="https://i.postimg.cc/bNGHBSDk/retro-polaroid-1783338623277.png">
+                    </div>
+                    <div class="gift-polaroid-card pic-right" onclick="zoomPhoto('https://i.postimg.cc/cH9wDddY/retro-polaroid-1783339182446.png', event)">
+                        <img src="https://i.postimg.cc/cH9wDddY/retro-polaroid-1783339182446.png">
+                    </div>
+                </div>
+
+                <img class="gift-bouquet-img" id="giftBouquet" src="https://feeldreams.github.io/cilukba.gif" alt="Buket Bunga">
+            </div>
+        </div>
+    </div>
+
+    <div id="zoom-overlay" onclick="closeZoom()">
+        <div class="zoomed-frame" id="zoomFrame" onclick="event.stopPropagation()">
+            <button class="close-zoom-btn" onclick="closeZoom()">✕</button>
+            <img id="imgTarget" src="">
+        </div>
+    </div>
+
+    <script>
+        let currentInput = "";
+        const audio = document.getElementById('bgm');
+        let fadeInterval = null;
+        
+        let clickCount = 0;
+        let isPrinting = false;
+        const polaroidList = [
+            "https://i.postimg.cc/jqfS3sqT/retro-polaroid-1783389861054.png",
+            "https://i.postimg.cc/mgmL1kjS/retro-polaroid-1783390064463.png",
+            "https://i.postimg.cc/BQs4hHwX/retro-polaroid-1783390064463.png",
+            "https://i.postimg.cc/cHn0zmS3/retro-polaroid-1783390016260.png",
+            "https://i.postimg.cc/VkZwLTsj/retro-polaroid-1783390113654.png",
+            "https://i.postimg.cc/rsTXP2gq/retro-polaroid-1783390204826.png"
+        ];
+
+        const specialGifts = [
+            "https://i.postimg.cc/3RBn3MY4/retro-polaroid-1783338551962.png",
+            "https://i.postimg.cc/bNGHBSDk/retro-polaroid-1783338623277.png",
+            "https://i.postimg.cc/cH9wDddY/retro-polaroid-1783339182446.png"
+        ];
+
+        function pressKey(num) {
+            if (currentInput.length < 6) {
+                currentInput += num;
+                document.getElementById('codeDisplay').textContent = currentInput.padEnd(6, '_');
+            }
+        }
+        function clearCode() {
+            currentInput = "";
+            document.getElementById('codeDisplay').textContent = "______";
+        }
+
+        function openClue() {
+            const overlay = document.getElementById('clue-overlay');
+            const frame = document.getElementById('clueFrame');
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                frame.style.transform = 'scale(1)';
+            }, 50);
+        }
+
+        function closeClue() {
+            const overlay = document.getElementById('clue-overlay');
+            const frame = document.getElementById('clueFrame');
+            frame.style.transform = 'scale(0.85)';
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 400);
+        }
+
+        function submitGateCode() {
+            if(currentInput === "200678") {
+                document.getElementById('curtain-left').style.transform = 'translateX(0)';
+                document.getElementById('curtain-right').style.transform = 'translateX(0)';
+                
+                setTimeout(() => {
+                    document.getElementById('gate-screen').style.display = 'none';
+                    document.getElementById('main-screen').style.display = 'flex';
+                }, 1000);
+
+                setTimeout(() => {
+                    document.getElementById('main-screen').style.opacity = '1';
+                    document.getElementById('curtain-left').style.transform = 'translateX(-100%)';
+                    document.getElementById('curtain-right').style.transform = 'translateX(100%)';
+                    
+                    audio.currentTime = 0;
+                    audio.play().then(() => {
+                        fadeInAudio(audio, 4000);
+                    }).catch(err => console.log("Autoplay dicegah:", err));
+
+                    setInterval(createPetal, 450);
+                }, 1300);
+            } else {
+                alert("Pasti bingung haha coba liat kanan bawah terus pencet huruf (C).");
+                clearCode();
+            }
+        }
+
+        function triggerHbdReveal() {
+            const container = document.getElementById('hbdContainer');
+            const cake = document.getElementById('cakeImg');
+            const letter = document.getElementById('letterBox');
+            const cameraSec = document.getElementById('cameraSection');
+            const spotify = document.getElementById('spotifyPlayer');
+
+            container.classList.add('moved-up');
+
+            cake.style.display = 'block';
+            setTimeout(() => { cake.classList.add('popup-show'); }, 50);
+
+            letter.style.display = 'block';
+            cameraSec.style.display = 'flex';
+            spotify.style.display = 'flex';
+
+            setTimeout(() => {
+                letter.style.transform = 'translate3d(0,0,0)';
+                letter.style.opacity = '1';
+                cameraSec.style.opacity = '1';
+                spotify.style.transform = 'translate3d(0,0,0)';
+                spotify.style.opacity = '1';
+            }, 200);
+        }
+
+        function executeCameraAction() {
+            if (isPrinting) return;
+
+            if (clickCount < 6) {
+                isPrinting = true;
+                const currentImgUrl = polaroidList[clickCount];
+                const shootEl = document.getElementById('polaroidShoot');
+                
+                shootEl.innerHTML = `<img src="${currentImgUrl}" style="width:100%; height:100%; object-fit:cover;">`;
+                shootEl.classList.add('print-out');
+
+                setTimeout(() => {
+                    const grid = document.getElementById('albumGrid');
+                    const newItem = document.createElement('div');
+                    newItem.className = 'album-item';
+                    newItem.innerHTML = `<img src="${currentImgUrl}">`;
+                    newItem.onclick = (e) => zoomPhoto(currentImgUrl, e);
+                    grid.appendChild(newItem);
+
+                    shootEl.classList.remove('print-out');
+                    shootEl.innerHTML = '';
+                    
+                    clickCount++;
+                    isPrinting = false;
+                }, 1150); // Menyesuaikan durasi luncuran cetak baru
+
+            } else if (clickCount === 6) {
+                showGiftPopup();
+            }
+        }
+
+        function showGiftPopup() {
+            const overlay = document.getElementById('gift-overlay');
+            const wrapper = document.getElementById('giftBoxWrapper');
+            const closeBtn = document.getElementById('closeGiftBtn');
+            
+            closeBtn.style.display = 'none';
+            closeBtn.style.opacity = '0';
+
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.classList.add('blur-bg');
+                wrapper.style.transform = 'translate3d(0, 0, 0)';
+            }, 50);
+            clickCount++; 
+        }
+
+        function openGiftContent() {
+            const giftImg = document.getElementById('giftImg');
+            const photosContainer = document.getElementById('giftPhotosContainer');
+            const closeBtn = document.getElementById('closeGiftBtn');
+            const bouquet = document.getElementById('giftBouquet');
+
+            giftImg.style.transition = 'opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+            giftImg.style.opacity = '0';
+            giftImg.style.transform = 'scale(0.5)';
+
+            setTimeout(() => {
+                giftImg.style.display = 'none';
+                photosContainer.style.display = 'flex';
+                closeBtn.style.display = 'flex';
+
+                setTimeout(() => {
+                    photosContainer.style.opacity = '1';
+                    closeBtn.style.opacity = '1';
+                    bouquet.classList.add('show-bq');
+                }, 60);
+            }, 450);
+        }
+
+        function closeGiftOverlay() {
+            const overlay = document.getElementById('gift-overlay');
+            const wrapper = document.getElementById('giftBoxWrapper');
+            const bouquet = document.getElementById('giftBouquet');
+            
+            wrapper.style.transition = 'transform 0.7s cubic-bezier(0.32, 0, 0.67, 0)';
+            wrapper.style.transform = 'translate3d(0, 100vh, 0)';
+            overlay.classList.remove('blur-bg');
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                bouquet.classList.remove('show-bq');
+                
+                const grid = document.getElementById('albumGrid');
+                specialGifts.forEach(imgUrl => {
+                    const newItem = document.createElement('div');
+                    newItem.className = 'album-item';
+                    newItem.innerHTML = `<img src="${imgUrl}">`;
+                    newItem.onclick = (e) => zoomPhoto(imgUrl, e);
+                    grid.appendChild(newItem);
+                });
+            }, 700);
+        }
+
+        function fadeInAudio(player, duration) {
+            clearInterval(fadeInterval);
+            player.volume = 0;
+            let interval = 50; 
+            let step = interval / duration;
+            fadeInterval = setInterval(() => {
+                if (player.volume + step < 1) { player.volume += step; } 
+                else { player.volume = 1; clearInterval(fadeInterval); }
+            }, interval);
+        }
+
+        function togglePlay() {
+            const playIcon = document.getElementById('playIcon');
+            if (audio.paused || audio.ended) {
+                if(audio.ended) audio.currentTime = 0;
+                audio.play();
+                playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+            } else {
+                audio.pause();
+                playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+            }
+        }
+
+        function zoomPhoto(imgSrc, event) {
+            event.stopPropagation();
+            const overlay = document.getElementById('zoom-overlay');
+            const frame = document.getElementById('zoomFrame');
+            document.getElementById('imgTarget').src = imgSrc;
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                frame.style.transform = 'scale(1)';
+            }, 50);
+        }
+
+        function closeZoom() {
+            const overlay = document.getElementById('zoom-overlay');
+            const frame = document.getElementById('zoomFrame');
+            frame.style.transform = 'scale(0.8)';
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            const symbols = ['🌸', '✨', '🌸', '🤍'];
+            petal.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            petal.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 4 + 4;
+            petal.style.animationDuration = duration + 's';
+            petal.style.fontSize = Math.random() * 7 + 12 + 'px';
+            document.body.appendChild(petal);
+            setTimeout(() => { petal.remove(); }, duration * 1000);
+        }
+    </script>
+</body>
+</html>
